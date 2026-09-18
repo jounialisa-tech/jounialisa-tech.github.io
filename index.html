@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="在浏览器中完成胶片自动裁剪、负片转换与手动调色。" />
+  <title>Film Digitizer · 胶片数字化工作台</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <aside class="sidebar">
+      <header class="brand">
+        <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div><p>FILM DIGITIZER</p><h1>胶片数字化<br />工作台</h1></div>
+      </header>
+
+      <label class="drop-zone" id="dropZone" for="fileInput">
+        <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp,image/bmp,image/tiff" />
+        <span class="upload-icon" aria-hidden="true">↥</span>
+        <strong>选择或拖入胶片照片</strong>
+        <small>JPG、PNG、WebP，建议小于 30MB</small>
+      </label>
+
+      <div class="field">
+        <label for="filmType">胶片类型</label>
+        <select id="filmType">
+          <option value="auto">自动识别</option>
+          <option value="color-negative">彩色负片</option>
+          <option value="bw-negative">黑白负片</option>
+          <option value="slide">反转片</option>
+        </select>
+      </div>
+
+      <button class="primary" id="processBtn" disabled>开始处理</button>
+      <button class="secondary" id="downloadAllBtn" disabled>下载全部结果</button>
+
+      <section class="privacy-note">
+        <span aria-hidden="true">⌁</span>
+        <p><strong>本地处理</strong><br />照片仅在你的浏览器中处理，不会上传服务器。</p>
+      </section>
+      <p class="file-name" id="fileName">尚未选择照片</p>
+    </aside>
+
+    <section class="workspace">
+      <header class="workspace-head">
+        <div><p class="eyebrow">WORKSPACE</p><h2 id="pageTitle">等待导入</h2><p id="pageHint">上传翻拍或扫描的胶片照片，程序会自动定位画格并转换颜色。</p></div>
+        <span class="count" id="countBadge">0 张</span>
+      </header>
+
+      <div class="progress" id="progress" hidden><span></span></div>
+      <section class="empty-state" id="emptyState">
+        <div class="film-outline" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <h3>处理结果会显示在这里</h3>
+        <p>先从左侧上传一张包含胶片的照片</p>
+      </section>
+      <section class="results-grid" id="resultsGrid" aria-live="polite"></section>
+    </section>
+  </main>
+
+  <dialog id="editorDialog" class="editor-dialog">
+    <div class="editor-shell">
+      <section class="editor-stage"><canvas id="editorCanvas"></canvas></section>
+      <aside class="editor-panel">
+        <header><p class="eyebrow">COLOR LAB</p><h2>手动调整</h2><p>调整只作用于自动转换结果，可以随时恢复。</p></header>
+        <div id="sliderList" class="slider-list"></div>
+        <div class="editor-actions">
+          <button class="ghost" id="resetBtn">恢复自动效果</button>
+          <div><button class="ghost" id="cancelBtn">取消</button><button class="primary compact" id="doneBtn">完成</button></div>
+        </div>
+      </aside>
+    </div>
+  </dialog>
+
+  <canvas id="workCanvas" hidden></canvas>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script src="./app.js"></script>
+</body>
+</html>
